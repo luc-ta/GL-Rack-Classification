@@ -1,0 +1,81 @@
+local n, k0, k, i, R, s, seen, new, j, k, quandles, medial, both, isQuandle, isMedial, x, y, z, sxz, sxy;
+n:=8;
+k0:=1; # which GL-rack to begin with; to search all, pick k0 := 1
+k:=189373; # number of GL-racks
+seen:=[];
+quandles:=0;
+medial:=0;
+both:=0;
+# comment the next few lines out if you're resuming a previously interrupted search
+PrintTo(Concatenation(GLR.path, "GL_quandles_order_", String(n), ".txt"), "return [ "); 
+PrintTo(Concatenation(GLR.path, "medial_GL_racks_order_", String(n), ".txt"), "return [ "); 
+PrintTo(Concatenation(GLR.path, "medial_GL_quandles_order_", String(n), ".txt"), "return [ "); 
+for i in [k0..k] do
+	R:=GLR.Rack(n,i);
+	Print("Testing GL-rack ",String(i)," of ",String(k),"...\n");
+	s:=R[1];
+	new:=true;
+	for j in [0..Length(seen)-1] do
+		if s = seen[Length(seen)-j][1] then
+			new:=false;
+			k:=Length(seen)-j;
+			if seen[k][2] then
+				AppendTo (Concatenation(GLR.path, "GL_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+				quandles := quandles + 1;
+			fi;
+			if seen[k][3] then
+				AppendTo (Concatenation(GLR.path, "medial_GL_racks_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+				medial := medial + 1;
+				if seen[k][2] then
+					AppendTo (Concatenation(GLR.path, "medial_GL_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+					both := both + 1;
+				fi;
+			fi;
+			break;
+		fi;
+	od;
+	if new then
+		# if R = (X,s,u,d) is a GL-rack, then R is a GL-quandle iff u=d^(-1)
+		if R[2]*R[3] = () then
+			isQuandle:=true;
+			AppendTo (Concatenation(GLR.path, "GL_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+			quandles := quandles + 1;
+		else isQuandle := false;
+		fi;
+		# check whether R is medial
+		isMedial:=true;
+		for x in [1..n] do
+			for y in [1..n] do
+				for z in [1..n] do
+					sxz:=z^(s[x]);
+					sxy:=y^(s[x]);
+					if s[y]*s[sxz] <> s[z]*s[sxy] then
+						isMedial:=false;
+						break;
+					fi;
+				od;
+				if isMedial=false then
+					break;
+				fi;
+			od;
+			if isMedial=false then
+				break;
+			fi;
+		od;
+		if isMedial then
+			AppendTo (Concatenation(GLR.path, "medial_GL_racks_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+			medial := medial + 1;
+			if isQuandle then
+				AppendTo (Concatenation(GLR.path, "medial_GL_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+				both := both + 1;
+			fi;
+		fi;
+		Add(seen,[s,isQuandle,isMedial]);
+	fi;
+od;
+Print("Number of GL-quandles of order ",String(n),": ",String(quandles),"\n");
+Print("Number of medial GL-racks of order ",String(n),": ",String(medial),"\n");
+Print("Number of medial GL-quandles of order ",String(n),": ",String(both),"\n");
+AppendTo (Concatenation(GLR.path, "GL_quandles_order_", String(n), ".txt")," ];");
+AppendTo (Concatenation(GLR.path, "medial_GL_racks_order_", String(n), ".txt")," ];");
+AppendTo (Concatenation(GLR.path, "medial_GL_quandles_order_", String(n), ".txt")," ];");

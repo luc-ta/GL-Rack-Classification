@@ -1,0 +1,113 @@
+local n, k1, k2, R, s, u, d, i, solnsInRForKnot1, solnsInRForKnot2, newSolution, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10; 
+# change 10 to the max number of strands across your two front projections
+n:=3; # replace with however many elements you'd like in your coloring rack
+k1:=1; # start with GLR.Rack(n,k1); replace with the index of the GL-rack you'd like to start with
+k2:=13; # end with GLR.Rack(n,k1); replace with the index of the GL-rack you'd like to end with
+for i in [k1..k2] do
+	R:=GLR.Rack(n,i);
+	s:=R[1]; u:=R[2]; d:=R[3];
+	# GL-quandles cannot distinguish between Legendrian knots of the same smooth knot type and classical invariants; see Theorem 4.3 of Kimura, "Bi-Legendrian rack colorings of Legendrian knots"
+	if u*d = () then # # any GL-rack (X,s,u,d) is a GL-quandle iff u=d^(-1)
+		Print("GL-rack ", String(i), " of ", String(k2), " is a GL-quandle\n");
+		continue;
+	fi;
+	# find all homomorphisms from the GL-rack of knot 1 to R
+	Print("Finding all colorings of knot 1 by GL-rack ", String(i), " of ", String(k2), "...\n");
+	solnsInRForKnot1:=[];
+	for y1 in [1..n] do
+	for y2 in [1..n] do
+	for y3 in [1..n] do
+	for y4 in [1..n] do
+    for y5 in [1..n] do
+	for y6 in [1..n] do 
+	for y7 in [1..n] do
+	for y8 in [1..n] do
+	for y9 in [1..n] do
+	for y10 in [1..n] do 
+		# replace the lines below with the crossing relations induced by the Legendrian front projection of knot 1; there will be one for each crossing
+		# note: GAP evaluates cycle composition from left to right
+		if y5^(s[y1]) = y4^(u*d) then
+		if y2^(s[y7]) = y1^u then
+		if y7^(s[y2]) = y6 then
+		if y3^(s[y6]) = y2 then
+		if y4^(s[y5]) = y3 then
+		if y9^(s[y4]) = y8^d then
+		if y1^(s[y4]) = y10^(d*d) then
+		if y8^(s[y5]) = y7^u then
+		if y10^(s[y5]) = y9 then
+		if y6^(s[y10]) = y5^d then
+			newSolution:=[s,u,d,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10];
+			Print(newSolution,"\n");
+			Add(solnsInRForKnot1, newSolution);
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	# find all homomorphisms from the GL-rack of knot 2 to R
+	Print("Finding all colorings of knot 2 by GL-rack ", String(i), " of ", String(k2), "...\n");
+	solnsInRForKnot2:=[];
+	for y1 in [1..n] do
+	for y2 in [1..n] do
+	for y3 in [1..n] do
+	for y4 in [1..n] do
+    for y5 in [1..n] do
+	for y6 in [1..n] do 
+	for y7 in [1..n] do
+	for y8 in [1..n] do
+	for y9 in [1..n] do
+		# replace the lines below with the crossing relations induced by the Legendrian front projection of knot 2; there will be one for each crossing
+		# note: GAP evaluates cycle composition from left to right
+		if y7^(s[y1]) = y6^(u) then
+		if y5^(s[y1]) = y4 then
+		if y2^(s[y4]) = y1^u then
+		if y9^(s[y2]) = y8 then
+		if y3^(s[y8]) = y2 then
+		if y8^(s[y3]) = y7^d then
+		if y4^(s[y9]) = y3^d then
+		if y6^(s[y9]) = y5 then
+		if y1^(s[y6]) = y9^(d*d) then
+			newSolution:=[s,u,d,y1,y2,y3,y4,y5,y6,y7,y8,y9];
+			Print(newSolution,"\n");
+			Add(solnsInRForKnot2, newSolution);
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+		fi;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	od;
+	Print("Number of colorings of knot 1 by GL-rack ", String(i), " of ", String(k2),": ",Length(solnsInRForKnot1),"\n");
+	Print("Number of colorings of knot 2 by GL-rack ", String(i), " of ", String(k2),": ",Length(solnsInRForKnot2),"\n");
+	if Length(solnsInRForKnot1) <> Length(solnsInRForKnot2) then
+		Print("Since their GL-rack coloring numbers are distinct, these knots are not Legendrian isotopic.", "\n");
+	# un-comment the following line if you'd like the program to stop immediately after determining the knots are nonisotopic
+		break;
+	fi;
+od;

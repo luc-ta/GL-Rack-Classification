@@ -1,0 +1,85 @@
+local n, k0, k, Sn, isoClasses, nonisomorphicRacks, i, R, notHomsOfR, underlyingCount, u, valid, j, seen, u2, u2check, homFound, phi, l, theta, thetaPerm;
+n := 1; # size of rack
+k0 := 1; # which rack to begin with; pick 1 if you want to search all racks
+k := 1; # number of racks of size n
+Sn := SymmetricGroup(n);
+isoClasses := [];
+nonisomorphicRacks := 1;
+PrintTo(Concatenation(GLR.path, "GL_racks_of_order_", String(n), ".txt"), "return [ "); # comment this line out if you're resuming a previously interrupted search
+for i in [k0..k] do # test for valid GL-structures (u,d) on R
+	R := LRQ.Rack(n,i);
+	notHomsOfR := [];
+	underlyingCount := 0;
+	Print("Searching for GL-structures on rack ",String(i)," of ",String(k),"...\n");
+	for u in Sn do
+		valid := true;
+		for j in [1..n] do 
+			# Does u centralize Inn(R)?
+			if u*R[j] <> R[j]*u then
+				valid := false;
+				break;
+			fi;
+			# Is u a rack automorphism?
+			if u*R[j^u] <> R[j]*u then
+				valid := false;
+				break;
+			fi;
+		od;
+		if valid = true then 
+			# (R,u) is a GL-rack
+			# check whether (R,u) is isomorphic to a previously known GL-rack
+			seen := false;
+			if underlyingCount <> 0 then
+				for j in [nonisomorphicRacks..Length(isoClasses)] do # suffices since a GL-rack isomorphism is also an isomorphism of the underlying racks
+					u2 := isoClasses[j][2];
+					# for efficiency, first verify a necessary condition for a GL-rack isomorphism to exist
+					u2check := u2 in ConjugacyClass(Sn, u);
+					if u2check = false then
+						continue;
+					fi;
+					# search for a GL-rack isomorphism from (R,u) to (R,u2)
+					# note that function composition is left to right in GAP
+					homFound := false;
+					for phi in Sn do
+						# Have we already seen that phi isn't in Aut(R)?
+						if phi in notHomsOfR then continue; fi;
+						# Does phi intertwine the GL-structures?
+						if u*phi = phi*u2 then
+							homFound := true;
+							# If so, is phi also a rack automorphism?
+							for l in [1..n] do
+								if R[l]*phi <> phi*R[l^phi] then
+									homFound := false;
+									Add(notHomsOfR, phi);
+									break;
+								fi;
+							od;
+						fi;
+						if homFound = true then
+							seen := true;
+							break;
+						fi;
+					od;
+					if seen = true then
+						break;
+					fi;
+				od;
+			fi;
+			if seen = false then
+				# found a brand-new GL-rack
+				underlyingCount := underlyingCount + 1;
+				theta := x -> x^R[x];
+				thetaPerm := PermList( List([1..n], theta) );
+				Add(isoClasses,[R,u,Inverse(thetaPerm)*Inverse(u)]);
+				AppendTo (Concatenation(GLR.path, "GL_racks_of_order_", String(n), ".txt"), Concatenation(String(isoClasses[Length(isoClasses)]),",\n"));
+			fi;
+		fi;
+	od;
+	nonisomorphicRacks := nonisomorphicRacks + underlyingCount;
+od;
+# for i in [1..Length(isoClasses)-1] do
+#	AppendTo (Concatenation(GLR.path, "GL_racks_of_order_", String(n), ".txt"), Concatenation(String(isoClasses[i]),",\n"));
+# od;
+AppendTo (Concatenation(GLR.path, "GL_racks_of_order_", String(n), ".txt")," ];");
+Print(Concatenation("Printed results to ", GLR.path, "GL_racks_of_order_", String(n), ".txt\n"));
+Print("Number of GL-racks of order ",String(n),": ",String(Length(isoClasses)));
