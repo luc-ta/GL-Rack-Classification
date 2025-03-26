@@ -1,8 +1,10 @@
 #====================================================================
-# Library of all GL-racks of order 1 to 7 up to isomorphism
+# Library of all GL-racks of order 1 to 8 up to isomorphism
 # Compiled by Lực Ta
 # Based on the rack library of Petr Vojtěchovský and Seung Yeop Yang at 
 #    https://www.cs.du.edu/~petr/libraries_of_algebraic_structures.html
+# For more information, see the following paper:
+#    link
 #====================================================================
 
 #====================================================================
