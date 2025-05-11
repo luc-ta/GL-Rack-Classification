@@ -1,0 +1,34 @@
+local n, k0, k, i, R, count, list;
+n:=8;
+k0:=1; # which GL-rack to begin with; to search all, pick k0 := 1
+k:=15455; # number of GL-racks/quandles
+seen:=[];
+count:=0;
+# uncomment and comment out lines to switch between searching for different types of Legendrian racks
+# PrintTo(Concatenation(GLR.path, "Legendrian_racks_order_", String(n), ".txt"), "return [ "); 
+# PrintTo(Concatenation(GLR.path, "Legendrian_quandles_order_", String(n), ".txt"), "return [ "); 
+# PrintTo(Concatenation(GLR.path, "medial_Legendrian_racks_order_", String(n), ".txt"), "return [ "); 
+ PrintTo(Concatenation(GLR.path, "medial_Legendrian_quandles_order_", String(n), ".txt"), "return [ "); 
+# list:=ReadAsFunction(Concatenation(GLR.path, "GL_racks_of_order_", String(n), ".txt"))();
+# list:=ReadAsFunction(Concatenation(GLR.path, "GL_quandles_order_", String(n), ".txt"))();
+# list:=ReadAsFunction(Concatenation(GLR.path, "medial_GL_racks_order_", String(n), ".txt"))();
+ list:=ReadAsFunction(Concatenation(GLR.path, "medial_GL_quandles_order_", String(n), ".txt"))();
+for i in [k0..k] do
+	R:=list[i];
+	Print("Testing GL-rack ",String(i)," of ",String(k),"...\n");
+	if R[2] = R[3] then
+		count := count + 1;
+#		AppendTo (Concatenation(GLR.path, "Legendrian_racks_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+#		AppendTo (Concatenation(GLR.path, "Legendrian_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+#		AppendTo (Concatenation(GLR.path, "medial_Legendrian_racks_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+		AppendTo (Concatenation(GLR.path, "medial_Legendrian_quandles_order_", String(n), ".txt"), Concatenation(String(R),",\n"));
+	fi;
+od;
+# Print("Number of Legendrian racks of order ",String(n),": ",String(count),"\n");
+# Print("Number of Legendrian quandles of order ",String(n),": ",String(count),"\n");
+# Print("Number of medial Legendrian racks of order ",String(n),": ",String(count),"\n");
+ Print("Number of medial Legendrian quandles of order ",String(n),": ",String(count),"\n");
+# AppendTo (Concatenation(GLR.path, "Legendrian_racks_order_", String(n), ".txt")," ];");
+# AppendTo (Concatenation(GLR.path, "Legendrian_quandles_order_", String(n), ".txt")," ];");
+# AppendTo (Concatenation(GLR.path, "medial_Legendrian_racks_order_", String(n), ".txt")," ];");
+ AppendTo (Concatenation(GLR.path, "medial_Legendrian_quandles_order_", String(n), ".txt")," ];");

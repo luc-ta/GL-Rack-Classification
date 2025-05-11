@@ -1,0 +1,18 @@
+local n, i, R, list, isKei, kei;
+UpperBounds := [1, 2, 5, 15, 54, 240, 1306, 9477];
+classes := [];
+sizes := [];
+isKei := R -> ForAll([1..n], i -> R[1][i]^2 = ());
+
+for n in [2..Size(UpperBounds)] do
+	# uncomment and comment out lines to switch between searching for different types of Legendrian racks
+	list:=ReadAsFunction(Concatenation(GLR.path, "Legendrian_quandles_order_", String(n), ".txt"))();
+	# list:=ReadAsFunction(Concatenation(GLR.path, "medial_Legendrian_quandles_order_", String(n), ".txt"))();
+	kei := Filtered(list, R -> isKei( R ));
+	PrintTo (Concatenation(GLR.path, "Legendrian_kei_order_", String(n), ".txt"), kei);
+	# PrintTo (Concatenation(GLR.path, "medial_Legendrian_kei_order_", String(n), ".txt"), kei);
+	Add(sizes, Size(kei));
+od;
+
+
+return sizes;

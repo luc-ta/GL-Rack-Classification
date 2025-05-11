@@ -1,0 +1,20 @@
+local IsInvolutory, R, racks, UpperBounds, classes, sizes, L, i, n;
+
+IsInvolutory := R -> ForAll([1..Length(R)], i -> R[i]^2 = ());
+
+UpperBounds := [1, 2, 6, 19, 74, 353, 2080, 16023 ];
+classes := [];
+sizes := [];
+
+for n in [1..Size(UpperBounds)] do
+	racks := List([1..UpperBounds[n]], x -> LRQ.Rack(n,x));
+	L := Filtered(
+      racks,
+      R -> IsInvolutory( R )
+    );
+	Add(classes, L);
+	PrintTo(Concatenation(GLR.path, "involutive_racks_order_", String(n), ".txt"), L);
+	Add(sizes, Size(L));
+od;
+
+return sizes;

@@ -1,0 +1,13 @@
+local n, R, list, si, fs, thetaPerm, racks;
+ 
+fs := R -> List(R[1], si -> R[2]*si);
+thetaPerm := R -> PermList(List([1..n], x -> x^fs(R)[x]));
+
+for n in [2..8] do
+	# uncomment and comment out lines to switch between searching for different types of Legendrian racks
+	# list:=ReadAsFunction(Concatenation(GLR.path, "Legendrian_kei_order_", String(n), ".txt"))();
+	list:=ReadAsFunction(Concatenation(GLR.path, "medial_Legendrian_kei_order_", String(n), ".txt"))();
+	racks := List(list, R -> [fs(R), thetaPerm(R)]);
+	# PrintTo (Concatenation(GLR.path, "involutory_racks_order_", String(n), ".txt"), racks);
+	PrintTo (Concatenation(GLR.path, "medial_involutory_racks_order_", String(n), ".txt"), racks);
+od;

@@ -1,0 +1,20 @@
+local n, k0, k, i, R, list, s, si, fs, theta, thetaPerm;
+n:=2;
+k0:=1; # which GL-rack to begin with; to search all, pick k0 := 1
+k:=2; # number of GL-racks/quandles
+# uncomment and comment out lines to switch between searching for different types of Legendrian racks
+# PrintTo(Concatenation(GLR.path, "KI_racks_order_", String(n), ".txt"), "return [ "); 
+ PrintTo(Concatenation(GLR.path, "medial_KI_racks_order_", String(n), ".txt"), "return [ "); 
+# list:=ReadAsFunction(Concatenation(GLR.path, "Legendrian_quandles_order_", String(n), ".txt"))();
+ list:=ReadAsFunction(Concatenation(GLR.path, "medial_Legendrian_quandles_order_", String(n), ".txt"))();
+for i in [k0..k] do
+	Print("Converting Legendrian quandle ",String(i)," of ",String(k),"...\n");
+	R:=list[i];
+	s:=R[1];
+	fs:=List(s, si -> R[2]*si);
+	thetaPerm := PermList(List([1..n], x -> x^fs[x]));
+#	AppendTo (Concatenation(GLR.path, "KI_racks_order_", String(n), ".txt"), Concatenation(String([fs, thetaPerm]),",\n"));
+	AppendTo (Concatenation(GLR.path, "medial_KI_racks_order_", String(n), ".txt"), Concatenation(String([fs, thetaPerm]),",\n"));
+od;
+# AppendTo (Concatenation(GLR.path, "KI_racks_order_", String(n), ".txt")," ];");
+ AppendTo (Concatenation(GLR.path, "medial_KI_racks_order_", String(n), ".txt")," ];");
