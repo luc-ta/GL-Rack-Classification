@@ -3,8 +3,9 @@
 # Compiled by Lực Ta
 # Based on the rack library of Petr Vojtěchovský and Seung Yeop Yang at 
 #    https://www.cs.du.edu/~petr/libraries_of_algebraic_structures.html
-# For more information, see the following paper:
+# For more information, see the following papers:
 #    https://arxiv.org/abs/2504.12671
+#    https://arxiv.org/abs/2505.08090
 #====================================================================
 
 #====================================================================
